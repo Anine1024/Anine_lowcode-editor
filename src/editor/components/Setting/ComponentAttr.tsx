@@ -9,10 +9,9 @@ export default function ComponentAttr() {
   const { curComponentId, curComponent, updateComponentProps } = useComponentsStore()
   const { componentConfig } = useComponentConfigStore()
 
-  // 回显
   useEffect(() => {
-    const data = form.getFieldsValue()
-    form.setFieldsValue({...data, ...curComponent?.props})
+    form.resetFields()
+    form.setFieldsValue(curComponent?.props || {})
   }, [curComponent])
 
   if (!curComponent || !curComponentId) {
@@ -32,7 +31,9 @@ export default function ComponentAttr() {
 
 
   const valueChange = (values: any) => {
-    console.log(values)
+    if (curComponentId) {
+      updateComponentProps(curComponentId, values)
+    }
   }
 
   return (

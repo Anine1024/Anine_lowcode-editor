@@ -17,29 +17,25 @@ export default function ComponentStyle() {
   const [css, setCss] = useState<string>(`.comp{\n\n}`);
 
   useEffect(() => {
-    form.resetFields();
-
-    const data = form.getFieldsValue();
-    form.setFieldsValue({...data, ...curComponent?.styles});
-
+    form.resetFields()
+    form.setFieldsValue(curComponent?.styles || {})
     setCss(toCSSStr(curComponent?.styles!))
   }, [curComponent])
 
-  function toCSSStr(css: Record<string, any>) {
-    let str = `.comp {\n`;
-    for(let key in css) {
-        let value = css[key];
-        if(!value) {
-            continue;
-        }
-        if(['width', 'height'].includes(key) &&  !value.toString().endsWith('px')) {
-            value += 'px';
-        }
-
-        str += `\t${key}: ${value};\n`
+  function toCSSStr(css: Record<string, any> | undefined) {
+    if (!css) return `.comp {\n\n}`
+    let str = `.comp {\n`
+    for (let key in css) {
+      let value = css[key]
+      if (!value) continue
+      if (['width', 'height', 'minHeight', 'borderRadius', 'padding', 'margin'].includes(key) && !value.toString().endsWith('px') && !isNaN(Number(value))) {
+        value += 'px'
+      }
+      const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase()
+      str += `\t${cssKey}: ${value};\n`
     }
-    str += `}`;
-    return str;
+    str += `}`
+    return str
   }
 
   if (!curComponentId || !curComponent) return null;
@@ -62,23 +58,27 @@ export default function ComponentStyle() {
     }
   }
 
-  const handleEditorChange = debounce((value) => {
-    setCss(value);
+  const handleEditorChange = debounce((value: string | undefined) => {
+    if (!value) return
+    setCss(value)
 
-    let css: Record<string, any> = {};
+    const css: Record<string, any> = {}
 
     try {
-        const cssStr = value.replace(/\/\*.*\*\//, '') // 去掉注释 /** */
-            .replace(/(\.?[^{]+{)/, '') // 去掉 .comp {
-            .replace('}', '');// 去掉 }
-        
-        styleToObject(cssStr, (name, value) => {
-            css[name.replace(/-\w/, (item) => item.toUpperCase().replace('-', ''))] = value;
-        });
-    
-        updateComponentStyles(curComponentId, {...form.getFieldsValue(), ...css}, true);
-    } catch(e) {}
-  }, 500);
+      const cssStr = value
+        .replace(/\/\*[\s\S]*?\*\//g, '')  // 移除所有块注释
+        .replace(/\/\/.*/g, '')             // 移除所有行注释
+        .replace(/[^{]*\{/, '')             // 移除选择器 {
+        .replace(/\}/, '')                  // 移除 }
+        .trim()
+
+      styleToObject(cssStr, (name, value) => {
+        css[name.replace(/-([a-z])/g, (_, c) => c.toUpperCase())] = value
+      })
+
+      updateComponentStyles(curComponentId, { ...form.getFieldsValue(), ...css })
+    } catch (_) { /* CSS 解析失败时忽略 */ }
+  }, 500)
 
   return (
     <Form

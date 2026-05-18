@@ -48,19 +48,18 @@ export default function HoverMask({ containerClassName, componentId, portalWrapp
   }
 
 
-  const el = useMemo(() => {
-    // const el = document.createElement('div')
-    // el.className = 'wrapper'
-    // const container = document.querySelector(`.${containerClassName}`)
-    // container!.appendChild(el)
-    // return el
-    return document.querySelector(`.${portalWrapperClassName}`)
+  const [el, setEl] = useState<HTMLElement | null>(null)
+
+  useEffect(() => {
+    setEl(document.querySelector(`.${portalWrapperClassName}`))
   }, [])
 
   const curComponent = useMemo(() => {
     return getComponentById(componentId, components)
   }, [componentId])
 
+
+  if (!el) return null
 
   return createPortal((
     <>

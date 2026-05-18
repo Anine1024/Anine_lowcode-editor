@@ -32,7 +32,7 @@ export default function Page({id, name, children, styles}: CommonComponentProps)
   //   }
   // }))
 
-  const { canDrop, dropRef, contextHolder } = useMaterialDrop(['Button', 'Container'], id)
+  const { canDrop, dropRef, contextHolder } = useMaterialDrop(['Button', 'Container', 'Input', 'Image'], id)
 
   return (
     <>
