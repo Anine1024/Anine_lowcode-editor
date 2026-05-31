@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDrag } from 'react-dnd'
 
 export interface MaterialItemProps {
@@ -8,14 +7,14 @@ export interface MaterialItemProps {
 export default function MaterialItem(props: MaterialItemProps) {
   const [_, dragRef] = useDrag(() => ({
     type: props.name,
-    item: {  // 被拖动的内容
+    item: {
       type: props.name
     }
   }))
-  
+
   return (
     <div
-      ref={dragRef}
+      ref={dragRef as unknown as React.Ref<HTMLDivElement>}
       className='
         border-dashed
         border-[1px]

@@ -75,7 +75,7 @@ export default function SelectedMask({ containerClassName, portalWrapperClassNam
   const [el, setEl] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
-    setEl(document.querySelector(`.${portalWrapperClassName}`))
+    setEl(document.querySelector(`.${portalWrapperClassName}`) as HTMLElement | null)
   }, [])
 
   const curComponent = useMemo(() => {  // 找到被点击的组件对象

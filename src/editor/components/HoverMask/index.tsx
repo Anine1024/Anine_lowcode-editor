@@ -51,7 +51,7 @@ export default function HoverMask({ containerClassName, componentId, portalWrapp
   const [el, setEl] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
-    setEl(document.querySelector(`.${portalWrapperClassName}`))
+    setEl(document.querySelector(`.${portalWrapperClassName}`) as HTMLElement | null)
   }, [])
 
   const curComponent = useMemo(() => {

@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Space, Card, Empty } from 'antd'
+import { Button, Form, Input, Select, Card, Empty } from 'antd'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useComponentsStore } from '../../stores/components'
 
@@ -18,7 +18,6 @@ const ACTION_OPTIONS = [
 
 export default function ComponentEvent() {
   const { curComponent, curComponentId, updateComponentProps } = useComponentsStore()
-  const [form] = Form.useForm()
 
   if (!curComponent || !curComponentId) {
     return (

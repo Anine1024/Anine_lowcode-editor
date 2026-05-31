@@ -1,7 +1,6 @@
 import MonacoEditor from '@monaco-editor/react'
 import type { OnMount, EditorProps } from '@monaco-editor/react'
-import { editor } from 'monaco-editor'
-import { useEffect, useRef } from 'react'
+import type { editor } from 'monaco-editor'
 
 export interface EditorFile {
   name: string
