@@ -24,16 +24,20 @@ export default function SelectedMask({ containerClassName, portalWrapperClassNam
 
   useEffect(() => {
     updatePosition()
-  }, [componentId])
+  }, [componentId, components])
 
   useEffect(() => {
-    const resizeHandler = () => {
-      updatePosition()
-    }
+    const resizeHandler = () => updatePosition()
+    const scrollHandler = () => updatePosition()
+
     window.addEventListener('resize', resizeHandler)
 
-    return () => {  // 组件卸载时，移除事件监听器
+    const container = document.querySelector(`.${containerClassName}`)
+    container?.addEventListener('scroll', scrollHandler)
+
+    return () => {
       window.removeEventListener('resize', resizeHandler)
+      container?.removeEventListener('scroll', scrollHandler)
     }
   }, [])
 
@@ -55,7 +59,7 @@ export default function SelectedMask({ containerClassName, portalWrapperClassNam
     const { top: containerTop, left: containerLeft } = container.getBoundingClientRect()
 
     let labelTop = top - containerTop + container.scrollTop
-    let labelLeft = left - containerLeft + width
+    let labelLeft = left - containerLeft + width + container.scrollLeft
 
     if (labelTop <= 0) {
       labelTop -= -20
@@ -63,7 +67,7 @@ export default function SelectedMask({ containerClassName, portalWrapperClassNam
 
     setPosition({
       top: top - containerTop + container.scrollTop,
-      left: left - containerLeft + container.scrollTop,
+      left: left - containerLeft + container.scrollLeft,
       width,
       height,
       labelTop,

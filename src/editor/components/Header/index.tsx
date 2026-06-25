@@ -1,4 +1,4 @@
-import { Space, Button, Tooltip } from 'antd'
+import { Space, Button, Tooltip, Popconfirm } from 'antd'
 import { ExportOutlined, ClearOutlined } from '@ant-design/icons'
 import { useComponentsStore } from '../../stores/components'
 
@@ -53,11 +53,28 @@ export default function Header() {
           {mode === 'edit' && (
             <>
               <Tooltip title="导出JSON">
-                <Button icon={<ExportOutlined />} onClick={handleExport}>导出</Button>
+                <Popconfirm
+                  title="确认导出？"
+                  description="将当前页面配置导出为 JSON 文件"
+                  onConfirm={handleExport}
+                  okText="确认"
+                  cancelText="取消"
+                >
+                  <Button icon={<ExportOutlined />}>导出</Button>
+                </Popconfirm>
               </Tooltip>
               <Button onClick={handleImport}>导入</Button>
               <Tooltip title="清空画布">
-                <Button icon={<ClearOutlined />} onClick={handleClear} danger>清空</Button>
+                <Popconfirm
+                  title="确认清空？"
+                  description="所有组件将被删除且不可恢复"
+                  onConfirm={handleClear}
+                  okText="确认清空"
+                  cancelText="取消"
+                  okButtonProps={{ danger: true }}
+                >
+                  <Button icon={<ClearOutlined />} danger>清空</Button>
+                </Popconfirm>
               </Tooltip>
               <Button type="primary" onClick={() => setMode('preview')}>预览</Button>
             </>

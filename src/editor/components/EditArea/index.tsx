@@ -61,7 +61,7 @@ export default function EditArea() {
   }
 
   return (
-    <div className='h-[100%] edit-area' 
+    <div className='h-[100%] edit-area overflow-auto'
       onMouseOver={handleMouseOver} 
       onMouseLeave={() => setHoverComponentId(undefined)}
       onClick={handleClick}

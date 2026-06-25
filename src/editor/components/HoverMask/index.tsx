@@ -23,7 +23,22 @@ export default function HoverMask({ containerClassName, componentId, portalWrapp
 
   useEffect(() => {
     updatePosition()
-  }, [componentId])
+  }, [componentId, components])
+
+  useEffect(() => {
+    const resizeHandler = () => updatePosition()
+    const scrollHandler = () => updatePosition()
+
+    window.addEventListener('resize', resizeHandler)
+
+    const container = document.querySelector(`.${containerClassName}`)
+    container?.addEventListener('scroll', scrollHandler)
+
+    return () => {
+      window.removeEventListener('resize', resizeHandler)
+      container?.removeEventListener('scroll', scrollHandler)
+    }
+  }, [])
 
   function updatePosition() {
     if (!componentId) return
@@ -39,11 +54,11 @@ export default function HoverMask({ containerClassName, componentId, portalWrapp
 
     setPosition({
       top: top - containerTop + container.scrollTop,
-      left: left - containerLeft + container.scrollTop,
+      left: left - containerLeft + container.scrollLeft,
       width,
       height,
       labelTop: top - containerTop + container.scrollTop,
-      labelLeft: left - containerLeft + width,
+      labelLeft: left - containerLeft + width + container.scrollLeft,
     })
   }
 
